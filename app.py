@@ -27,15 +27,24 @@ st.markdown("""
   .kpi .v{font-size:30px;font-weight:700;color:#fff;line-height:1;}
   .kpi .l{font-size:11px;color:#7c8190;text-transform:uppercase;letter-spacing:.08em;margin-top:6px;}
   .kpi .d{font-size:11px;color:#34d399;margin-top:4px;}
-  .qrow{background:#0e1015;border:1px solid #1b1e2a;border-left:3px solid var(--c);
-        border-radius:10px;padding:10px 14px;margin-bottom:7px;}
-  .qrow:hover{border-color:#2a2e3e;background:#12141b;}
-  .rank{font-size:13px;color:#7c8190;font-weight:600;}
-  .cell{font-size:14px;font-weight:600;color:#f4f5f7;font-family:ui-monospace,monospace;}
-  .meta{font-size:11px;color:#868b99;}
-  .score{font-size:20px;font-weight:700;color:#fff;float:right;}
-  .pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;
-        background:#1a1d28;color:#9aa0b0;margin-right:5px;}
+  .qrow{position:relative;background:#0e1015;border:1px solid #1b1e2a;
+        border-radius:14px;padding:14px 16px 14px 16px;margin-bottom:10px;
+        transition:all .15s ease;display:flex;align-items:center;gap:14px;}
+  .qrow:hover{border-color:#2f3445;background:#13151d;transform:translateY(-1px);}
+  .rankbadge{flex:0 0 auto;width:34px;height:34px;border-radius:10px;
+        background:#1a1d28;display:flex;align-items:center;justify-content:center;
+        font-size:13px;font-weight:700;color:#e6e7eb;border:1px solid #262a38;}
+  .qmid{flex:1 1 auto;min-width:0;}
+  .qtop{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+  .tier{width:8px;height:8px;border-radius:50%;background:var(--c);flex:0 0 auto;}
+  .cell{font-size:15px;font-weight:700;color:#f4f5f7;font-family:ui-monospace,monospace;letter-spacing:-.01em;}
+  .loc{font-size:12px;color:#b4b9c6;font-weight:500;}
+  .meta{font-size:11px;color:#737886;}
+  .qscore{flex:0 0 auto;text-align:right;}
+  .qscore .n{font-size:22px;font-weight:800;color:var(--c);line-height:1;letter-spacing:-.02em;}
+  .qscore .lbl{font-size:9px;color:#5f6573;text-transform:uppercase;letter-spacing:.07em;margin-top:3px;}
+  .pill{display:inline-block;font-size:9.5px;padding:2px 8px;border-radius:20px;
+        background:#1a1d28;color:#9aa0b0;font-weight:600;letter-spacing:.03em;}
   .pill.hot{background:#3b1418;color:#f87171;}
   .pill.art{background:#2a1f08;color:#fbbf24;}
   .sec{font-size:12px;color:#7c8190;text-transform:uppercase;letter-spacing:.1em;
@@ -127,14 +136,18 @@ with qcol:
         for i,row in sel.iterrows():
             mx = sel[rank_col].max()
             c = "#f87171" if row[rank_col]>0.66*mx else "#fbbf24" if row[rank_col]>0.33*mx else "#60a5fa"
-            hot = "<span class='pill hot'>HIGH RISK</span>" if row["hotspot_prob"]>0.9 else ""
-            art = "<span class='pill art'>FREIGHT</span>" if (show_heavy and row["heavy_share"]>0.5) else ""
-            loc = str(row.get("location","")).strip()[:34] or "—"
+            pills = ""
+            if row["hotspot_prob"]>0.9: pills += "<span class='pill hot'>HIGH RISK</span> "
+            if show_heavy and row["heavy_share"]>0.5: pills += "<span class='pill art'>FREIGHT</span> "
+            loc = str(row.get("location","")).strip()[:38] or "—"
             st.markdown(f"""<div class='qrow' style='--c:{c}'>
-              <span class='score'>{row['priority_score']:.0f}</span>
-              <span class='rank'>#{i+1}</span> &nbsp;<span class='cell'>{row['gh6']}</span><br/>
-              {hot}{art}
-              <span class='meta'>peak {int(row['peak_hour'])}:00 · {int(row['total_viol']):,} hist · {loc}</span>
+              <div class='rankbadge'>{i+1}</div>
+              <div class='qmid'>
+                <div class='qtop'><span class='tier'></span><span class='cell'>{row['gh6']}</span>&nbsp;{pills}</div>
+                <div class='loc'>{loc}</div>
+                <div class='meta'>peak {int(row['peak_hour'])}:00 · {int(row['total_viol']):,} historical violations</div>
+              </div>
+              <div class='qscore'><div class='n'>{row['priority_score']:.0f}</div><div class='lbl'>priority</div></div>
             </div>""", unsafe_allow_html=True)
 
 # ---------- FOOTER STRIP ----------

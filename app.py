@@ -112,8 +112,8 @@ with mcol:
     view_state = pdk.ViewState(latitude=float(sel["lat"].mean()),
         longitude=float(sel["lon"].mean()), zoom=10.6, pitch=35)
     st.pydeck_chart(pdk.Deck(layers=[base,layer], initial_view_state=view_state,
-        map_style="mapbox://styles/mapbox/dark-v10",
-        tooltip={"html":"<b>{gh6}</b><br/>Priority: {priority_score}<br/>"
+        map_provider="carto", map_style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+        tooltip={"html":"<b>{gh6}</b> · {location}<br/>Priority: {priority_score}<br/>"
                  "Peak hour: {peak_hour}:00<br/>Hist. violations: {total_viol}",
                  "style":{"backgroundColor":"#14161d","color":"#e6e7eb","fontSize":"12px"}}),
         use_container_width=True)

@@ -2,7 +2,8 @@
 
 **Flipkart Gridlock Hackathon · Round 2 Prototype**
 Team: **Last Mile Legends**
-Members: Ansh Vardhan & Bhavya Tiwari
+Members: - Ansh Vardhan
+           Bhavya Tiwari (https://github.com/Bhavya-Tiwari)
 Theme: *Poor Visibility on Parking-Induced Congestion*
 
 > Most teams show you **where** illegal parking happens.
